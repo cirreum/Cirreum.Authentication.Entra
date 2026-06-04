@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<AssemblyName>Cirreum.Authentication.Entra</AssemblyName>
+		<RootNamespace>Cirreum.Authentication</RootNamespace>
+		<Description>Azure Entra ID authentication scheme for the Cirreum framework. Wraps Microsoft.Identity.Web for Entra-issued JWT validation (Web API) and OpenID Connect (Web App). Renamed from Cirreum.Authorization.Entra per the Cirreum 1.0 Foundation Reset.</Description>
+		<PackageTags>cirreum;authentication;entra;azuread;jwt;openidconnect</PackageTags>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\..\Core\Cirreum.AuthenticationProvider\src\Cirreum.AuthenticationProvider\Cirreum.AuthenticationProvider.csproj" />
+
+		<PackageReference Include="Microsoft.Identity.Web" Version="4.9.0" />
+		<PackageReference Include="Cirreum.Providers" Version="1.2.0" />
+
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="Cirreum.Providers" />
+	</ItemGroup>
+
+</Project>
