@@ -21,4 +21,12 @@ public class EntraAuthenticationInstanceSettings
 	/// </summary>
 	public string Instance { get; set; } = "https://login.microsoftonline.com/";
 
+	/// <summary>
+	/// Scopes requested up-front during interactive sign-in (Web App host) so tokens for downstream APIs
+	/// are available without re-prompting. Ignored for a Web API host, where on-behalf-of acquisition
+	/// obtains downstream tokens on demand. Consumed only when the app registers a downstream-API callback
+	/// via <c>EnableDownstreamApi(...)</c>.
+	/// </summary>
+	public string[] InitialScopes { get; set; } = [];
+
 }

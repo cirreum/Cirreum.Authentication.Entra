@@ -36,18 +36,33 @@ public sealed class EntraAuthenticationRegistrar
 	public override void AddAuthenticationForWebApi(IConfigurationSection instanceSection,
 		EntraAuthenticationInstanceSettings providerSettings,
 		AuthenticationBuilder authBuilder) {
-		authBuilder.AddMicrosoftIdentityWebApi(
-					instanceSection,
-					jwtBearerScheme: providerSettings.Scheme);
+
+		var identityApi = authBuilder.AddMicrosoftIdentityWebApi(
+			instanceSection,
+			jwtBearerScheme: providerSettings.Scheme);
+
+		// If the app registered a downstream-API callback (auth.EnableDownstreamApi(...)), enable
+		// on-behalf-of token acquisition for THIS scheme, then run the app's app-wide extras once.
+		var downstream = EntraDownstreamRegistration.GetOrAdd(authBuilder.Services);
+		if (downstream.Callback is not null) {
+			downstream.InvokeOnce(identityApi.EnableTokenAcquisitionToCallDownstreamApi());
+		}
 	}
 
 	/// <inheritdoc/>
 	public override void AddAuthenticationForWebApp(IConfigurationSection instanceSection,
 		EntraAuthenticationInstanceSettings providerSettings,
 		AuthenticationBuilder authBuilder) {
-		authBuilder.AddMicrosoftIdentityWebApp(
-					instanceSection,
-					openIdConnectScheme: providerSettings.Scheme);
+
+		var identityApp = authBuilder.AddMicrosoftIdentityWebApp(
+			instanceSection,
+			openIdConnectScheme: providerSettings.Scheme);
+
+		// Web App host: token acquisition pre-requests the instance's InitialScopes at interactive sign-in.
+		var downstream = EntraDownstreamRegistration.GetOrAdd(authBuilder.Services);
+		if (downstream.Callback is not null) {
+			downstream.InvokeOnce(identityApp.EnableTokenAcquisitionToCallDownstreamApi(providerSettings.InitialScopes));
+		}
 	}
 
 }

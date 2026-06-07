@@ -8,10 +8,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\..\Core\Cirreum.AuthenticationProvider\src\Cirreum.AuthenticationProvider\Cirreum.AuthenticationProvider.csproj" />
+		<!-- Cirreum.Providers (+ Kernel/Contracts/Result) flow in transitively via Cirreum.AuthenticationProvider. -->
+		<PackageReference Include="Cirreum.AuthenticationProvider" Version="1.0.0" />
 
-		<PackageReference Include="Microsoft.Identity.Web" Version="4.9.0" />
-		<PackageReference Include="Cirreum.Providers" Version="1.2.0" />
+		<PackageReference Include="Microsoft.Identity.Web" Version="4.10.0" />
 
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
