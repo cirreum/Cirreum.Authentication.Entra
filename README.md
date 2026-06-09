@@ -6,8 +6,6 @@
 
 **Azure Entra ID authentication scheme for the Cirreum framework**
 
-> **Migrating from `Cirreum.Authorization.Entra`?** Renamed successor. See [`docs/MIGRATION-v1.md`](docs/MIGRATION-v1.md).
-
 ## Overview
 
 **Cirreum.Authentication.Entra** integrates Azure Entra ID (formerly Azure AD) authentication via Microsoft.Identity.Web. Validates JWTs from Entra tenants for Web API endpoints; runs the OpenID Connect flow for Web App scenarios.
