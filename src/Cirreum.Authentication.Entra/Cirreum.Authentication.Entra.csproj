@@ -11,7 +11,7 @@
 		<!-- Cirreum.Providers (+ Kernel/Contracts/Result) flow in transitively via Cirreum.AuthenticationProvider. -->
 		<PackageReference Include="Cirreum.AuthenticationProvider" Version="1.1.0" />
 
-		<PackageReference Include="Microsoft.Identity.Web" Version="4.10.0" />
+		<PackageReference Include="Microsoft.Identity.Web" Version="4.12.2" />
 
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
