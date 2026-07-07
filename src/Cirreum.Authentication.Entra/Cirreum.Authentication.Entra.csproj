@@ -9,7 +9,7 @@
 
 	<ItemGroup>
 		<!-- Cirreum.Providers (+ Kernel/Contracts/Result) flow in transitively via Cirreum.AuthenticationProvider. -->
-		<PackageReference Include="Cirreum.AuthenticationProvider" Version="1.2.0" />
+		<PackageReference Include="Cirreum.AuthenticationProvider" Version="1.2.1" />
 
 		<PackageReference Include="Microsoft.Identity.Web" Version="4.12.2" />
 
