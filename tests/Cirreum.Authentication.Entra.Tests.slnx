@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <File Path="../src/Directory.Build.props" />
+    <Project Path="../src/Cirreum.Authentication.Entra/Cirreum.Authentication.Entra.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <File Path="Directory.Build.props" />
+    <Project Path="Cirreum.Authentication.Entra.Tests/Cirreum.Authentication.Entra.Tests.csproj" />
+  </Folder>
+</Solution>

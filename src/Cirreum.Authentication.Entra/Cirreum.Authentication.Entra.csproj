@@ -20,4 +20,9 @@
 		<Using Include="Cirreum.Providers" />
 	</ItemGroup>
 
+	<!-- InternalsVisibleTo: Local Development Only -->
+	<ItemGroup Label="InternalsVisibleTo" Condition="'$(IsLocalBuild)' == 'true'">
+		<InternalsVisibleTo Include="Cirreum.Authentication.Entra.Tests" />
+	</ItemGroup>
+
 </Project>
