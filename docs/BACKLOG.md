@@ -19,17 +19,4 @@ upgrade, a coordinated multi-repo rollout).
 
 ## Queued
 
-### Deepen test coverage: registrar wiring
-
-**SemVer:** Patch
-**Trigger:** Next substantive change to `EntraAuthenticationRegistrar` (host-shape branching, token
-acquisition, or scheme registration).
-**Noted:** 2026-07-18 *(shrunk 2026-07-19 — the original item's test project, composition-path tests
-for `EnableDownstreamApi` / `EntraDownstreamRegistration`, and settings-binding coverage shipped;
-`EnableDownstreamApi` re-registration pinned as last-wins.)*
-
-The remaining untested surface is `EntraAuthenticationRegistrar` itself: per-instance scheme
-registration, the Web API vs Web App host-shape branch, and the downstream-API enablement path
-(`EnableTokenAcquisitionToCallDownstreamApi` + `InvokeOnce` on the converged builder). Needs a
-harness that exercises Microsoft.Identity.Web registration without a live IdP — verify against the
-service collection (registered schemes/options), not network behavior.
+_Empty._
