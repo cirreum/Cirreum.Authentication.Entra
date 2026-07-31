@@ -8,6 +8,10 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) — [SemVer](ht
 
 ## [Unreleased]
 
+### Updated
+
+- Updated `Microsoft.Identity.Web` `4.14.1` → `4.14.2`.
+
 ## [1.0.9] - 2026-07-29
 
 ### Updated
