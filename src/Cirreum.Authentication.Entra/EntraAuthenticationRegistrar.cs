@@ -2,6 +2,7 @@ namespace Cirreum.Authentication;
 
 using Cirreum.AuthenticationProvider;
 using Cirreum.Authentication.Configuration;
+using Cirreum.Security;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Configuration;
@@ -16,6 +17,9 @@ public sealed class EntraAuthenticationRegistrar
 		EntraAuthenticationInstanceSettings> {
 
 	public override string ProviderName => "Entra";
+
+	/// <inheritdoc/>
+	public override SubjectKind SubjectKind => SubjectKind.Human;
 
 	/// <inheritdoc/>
 	public override void ValidateSettings(EntraAuthenticationInstanceSettings settings) {

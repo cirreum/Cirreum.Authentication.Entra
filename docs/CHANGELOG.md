@@ -8,6 +8,15 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) — [SemVer](ht
 
 ## [Unreleased]
 
+### Added
+
+- **Declares `SubjectKind.Human`.** Entra schemes validate tokens issued to people, so nothing
+  downstream has to infer it from whether a token happens to carry a name claim.
+
+### Updated
+
+- Updated NuGet packages.
+
 ## [1.0.12] - 2026-08-04
 
 ### Updated
