@@ -2,7 +2,10 @@ namespace Cirreum.Authentication.Entra.Tests;
 
 using Cirreum.Authentication;
 using Cirreum.Authentication.Configuration;
+using Cirreum.AuthenticationProvider;
+using Cirreum.Security;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -44,10 +47,41 @@ public sealed class EntraAuthenticationRegistrarTests {
 
 	// AddAuthentication() rather than new AuthenticationBuilder(services): Microsoft.Identity.Web's
 	// registration depends on what it brings along (TimeProvider, data protection, encoders).
-	private static (IServiceCollection Services, AuthenticationBuilder AuthBuilder) NewComposition() {
+	private static (IServiceCollection Services, IAuthenticationBuilder AuthBuilder) NewComposition() {
 		var services = new ServiceCollection();
 		services.AddLogging();
-		return (services, services.AddAuthentication());
+		return (services, new TestAuthenticationBuilder(
+			services,
+			services.AddAuthentication(),
+			new ConfigurationBuilder().Build()));
+	}
+
+	private sealed class TestAuthenticationBuilder(
+		IServiceCollection services,
+		AuthenticationBuilder authBuilder,
+		IConfiguration configuration) : IAuthenticationBuilder {
+
+		public IServiceCollection Services { get; } = services;
+		public AuthenticationBuilder AuthBuilder { get; } = authBuilder;
+		public IConfiguration Configuration { get; } = configuration;
+
+		public IAuthenticationBuilder DeclareScheme(string scheme, SubjectKind subjectKind,
+			ClaimAuthority profile = ClaimAuthority.Unspecified,
+			ClaimAuthority roles = ClaimAuthority.Unspecified) {
+			this.Services.AddSingleton(new SchemeClaimAuthorityRegistration(scheme, subjectKind, profile, roles));
+			return this;
+		}
+
+		public IAuthenticationBuilder AddScheme<TOptions, THandler>(string scheme, SubjectKind subjectKind,
+			ClaimAuthority profile = ClaimAuthority.Unspecified,
+			ClaimAuthority roles = ClaimAuthority.Unspecified,
+			Action<TOptions>? configureOptions = null)
+			where TOptions : AuthenticationSchemeOptions, new()
+			where THandler : AuthenticationHandler<TOptions> {
+			this.DeclareScheme(scheme, subjectKind, profile, roles);
+			this.AuthBuilder.AddScheme<TOptions, THandler>(scheme, configureOptions);
+			return this;
+		}
 	}
 
 	private static IConfigurationSection EmptySection() =>
@@ -112,6 +146,24 @@ public sealed class EntraAuthenticationRegistrarTests {
 			.AddAuthenticationForWebApp(EmptySection(), Settings(), authBuilder);
 
 		RegisteredSchemes(services).Should().Contain(Scheme);
+	}
+
+	[Fact]
+	public void The_web_app_host_declares_the_cookie_scheme_as_a_continuation() {
+		// AddMicrosoftIdentityWebApp signs interactive sessions into the platform-default cookie
+		// scheme. The cookie re-presents the subject the OIDC sign-in established, so it declares
+		// Unknown — the origin's declaration governs, not the transport's.
+		var (services, authBuilder) = NewComposition();
+
+		new EntraAuthenticationRegistrar()
+			.AddAuthenticationForWebApp(EmptySection(), Settings(), authBuilder);
+
+		services
+			.Select(d => d.ImplementationInstance)
+			.OfType<SchemeClaimAuthorityRegistration>()
+			.Where(r => r.Scheme == CookieAuthenticationDefaults.AuthenticationScheme)
+			.Should().ContainSingle()
+			.Which.SubjectKind.Should().Be(SubjectKind.Unknown);
 	}
 
 	// -------------------------------------------------------------------------

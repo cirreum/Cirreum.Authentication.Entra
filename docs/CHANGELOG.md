@@ -11,7 +11,17 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) — [SemVer](ht
 ### Added
 
 - **Declares `SubjectKind.Human`.** Entra schemes validate tokens issued to people, so nothing
-  downstream has to infer it from whether a token happens to carry a name claim.
+  downstream has to infer it from whether a token happens to carry a name claim. The declaration
+  is contributed per instance by the audience registrar base (the registration funnel,
+  `Cirreum.AuthenticationProvider` 3.0.1).
+- **The Web App cookie scheme is declared.** `AddMicrosoftIdentityWebApp` signs interactive
+  sessions into the platform-default cookie scheme; the registrar now declares it
+  `SubjectKind.Unknown` — a continuation re-presenting the subject the OIDC sign-in established.
+
+### Changed
+
+- Registrar hooks take `IAuthenticationBuilder` per the `Cirreum.AuthenticationProvider` 3.0.1
+  contract consolidation. Registrar plumbing only; not app-facing surface.
 
 ### Updated
 

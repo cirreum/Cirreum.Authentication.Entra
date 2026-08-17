@@ -4,7 +4,7 @@ using Cirreum.AuthenticationProvider;
 using Cirreum.Authentication.Configuration;
 using Cirreum.Security;
 
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Identity.Web;
 
@@ -39,15 +39,15 @@ public sealed class EntraAuthenticationRegistrar
 	/// <inheritdoc/>
 	public override void AddAuthenticationForWebApi(IConfigurationSection instanceSection,
 		EntraAuthenticationInstanceSettings providerSettings,
-		AuthenticationBuilder authBuilder) {
+		IAuthenticationBuilder builder) {
 
-		var identityApi = authBuilder.AddMicrosoftIdentityWebApi(
+		var identityApi = builder.AuthBuilder.AddMicrosoftIdentityWebApi(
 			instanceSection,
 			jwtBearerScheme: providerSettings.Scheme);
 
 		// If the app registered a downstream-API callback (auth.EnableDownstreamApi(...)), enable
 		// on-behalf-of token acquisition for THIS scheme, then run the app's app-wide extras once.
-		var downstream = EntraDownstreamRegistration.GetOrAdd(authBuilder.Services);
+		var downstream = EntraDownstreamRegistration.GetOrAdd(builder.Services);
 		if (downstream.Callback is not null) {
 			downstream.InvokeOnce(identityApi.EnableTokenAcquisitionToCallDownstreamApi());
 		}
@@ -56,14 +56,20 @@ public sealed class EntraAuthenticationRegistrar
 	/// <inheritdoc/>
 	public override void AddAuthenticationForWebApp(IConfigurationSection instanceSection,
 		EntraAuthenticationInstanceSettings providerSettings,
-		AuthenticationBuilder authBuilder) {
+		IAuthenticationBuilder builder) {
 
-		var identityApp = authBuilder.AddMicrosoftIdentityWebApp(
+		var identityApp = builder.AuthBuilder.AddMicrosoftIdentityWebApp(
 			instanceSection,
 			openIdConnectScheme: providerSettings.Scheme);
 
+		// AddMicrosoftIdentityWebApp signs interactive sessions into the platform-default
+		// cookie scheme it registers internally. The cookie is a continuation — it re-presents
+		// the subject the OIDC sign-in established — so it declares Unknown; identical
+		// declarations from other instances or providers dedupe at composition close.
+		builder.DeclareScheme(CookieAuthenticationDefaults.AuthenticationScheme, SubjectKind.Unknown);
+
 		// Web App host: token acquisition pre-requests the instance's InitialScopes at interactive sign-in.
-		var downstream = EntraDownstreamRegistration.GetOrAdd(authBuilder.Services);
+		var downstream = EntraDownstreamRegistration.GetOrAdd(builder.Services);
 		if (downstream.Callback is not null) {
 			downstream.InvokeOnce(identityApp.EnableTokenAcquisitionToCallDownstreamApi(providerSettings.InitialScopes));
 		}
