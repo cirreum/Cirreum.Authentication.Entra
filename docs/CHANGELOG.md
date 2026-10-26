@@ -8,6 +8,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) — [SemVer](ht
 
 ## [Unreleased]
 
+### Security
+
+- Referenced `System.Security.Cryptography.Pkcs` `10.0.14` directly. Microsoft.Identity.Web 4.16.1 pins an
+  older version with a moderate and a high severity advisory (GHSA-2fmv-rv2c-59x7,
+  GHSA-846f-f764-76mx).
+
+### Updated
+
+- Updated NuGet packages.
+
 ## [1.1.5] - 2026-08-29
 
 ### Updated
