@@ -8,6 +8,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) — [SemVer](ht
 
 ## [Unreleased]
 
+## [1.1.6] - 2026-10-25
+
 ### Security
 
 - Referenced `System.Security.Cryptography.Pkcs` `10.0.14` directly. Microsoft.Identity.Web 4.16.1 pins an
